@@ -1,0 +1,161 @@
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Allure | Invesdocs</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Email List</title>
+    <style>
+        /* Styles for the table 
+        
+        
+        */
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        strong {
+            font-weight: bold;
+        }
+        .email-body {
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+/* Styles for the table 
+        
+        
+        */
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Styling for odd-numbered rows */
+        tr:nth-child(odd) {
+            background-color: #e9ecef; /* Alternate background color */
+        }
+
+        footer {
+            background-color: rgb(68, 66, 66);
+            color: white;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Invesdocs</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="{% url 'index' %}">Home</a></li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">ETMS <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'email_list' %}">Mailbox</a></li>
+          <li><a href="#">TMS</a></li>
+          <li><a href="#">WMS</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="{% url 'account_logout' %}"><span class="glyphicon glyphicon-user"></span> Sign out</a></li>
+      {% for account in user.socialaccount_set.all %}
+    {% if account.provider == 'google' %}
+        {% if account.extra_data.picture %}
+            <li><img src="{{ account.extra_data.picture }}" alt="Profile Picture"  style="vertical-align: middle;width: 40px;height: 40px;border-radius: 50%;margin:5px 0px"></li>
+        {% else %}
+            <!-- Default profile picture or a placeholder image -->
+            <li><a href="{% provider_login_url 'google' %} " class="btn btn-outline-primary btn-google mt-2"></span> Login</a></li>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+     
+      
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+    <a href="{% url 'email_list' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none; display: inline-block;">Go to Mailbox</a>
+    <a href="{% url 'reply_email' email.id %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none; display: inline-block;">Reply</a>
+    <hr>
+    <p><strong>Subject:</strong> {{ email.Subject }}</p>
+    <p><strong>From:</strong> {{ email.From }}</p>
+    <p><strong>To:</strong> {{ email.To }}</p>
+    <div class="email-body">
+        <p><strong>Body:</strong></p>
+        <pre>{{ email.body | safe }}</pre>
+    </div>
+
+   
+   
+<!--
+    <div class="email-body">
+        <p><strong>Body:</strong></p>
+        Display the email body fetched from the backend 
+        <p>{{ email.body }}</p>
+    </div>
+    <div class="email-body">
+        <p><strong>Body:</strong></p>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et magna sit amet nisl elementum maximus. Nullam ut lacus ac nulla luctus convallis vel sit amet felis. Nam vel nulla quis mi consequat fringilla. Integer vel aliquet lacus. Aliquam erat volutpat. Vivamus a ultricies urna. Donec non ex vel lacus pulvinar commodo. Nullam nec mi eget arcu fringilla ultrices vel at ex. Ut id ipsum non felis tempor mattis non eu sapien. Sed ac fermentum justo, eu egestas est.</p>
+        <p>Morbi ultricies metus ut magna tincidunt, quis vestibulum quam laoreet. Proin quis erat non lorem sollicitudin mattis. Duis accumsan bibendum tellus, sit amet scelerisque mi commodo non. Integer ultrices tortor vel malesuada aliquet. Vestibulum id luctus ex. Nullam id ante nisi. Nullam vel dignissim odio, vel dictum libero. Vestibulum non neque ut lectus efficitur ultricies at nec elit.</p>
+        <p>Phasellus eget nisl sit amet nulla consequat congue. Proin pharetra eros magna, et interdum quam lobortis nec. In hac habitasse platea dictumst. Integer bibendum eros et erat egestas, et accumsan nisi eleifend. Cras euismod posuere urna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi nec nunc at lorem fermentum pharetra.</p>
+    </div>-->
+</div>
+
+<br/>
+<br/>
+<footer>
+    Allure | Invesdocs &middot; &copy; 2021
+</footer>
+
+</body>
+</html>

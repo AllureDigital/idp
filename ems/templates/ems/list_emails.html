@@ -1,0 +1,136 @@
+
+
+
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Allure | Invesdocs</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Email List</title>
+    <style>
+        /* Styles for the table */
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Styling for odd-numbered rows */
+        tr:nth-child(odd) {
+            background-color: #e9ecef; /* Alternate background color */
+        }
+
+        footer {
+            background-color: rgb(68, 66, 66);
+            color: white;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+        }
+        .button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 20px; /* Adjust the margin as needed */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.button:hover {
+  background-color: #45a049; /* Darker Green */
+  text-decoration: none; /* Remove underline on hover */
+}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Invesdocs</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="{% url 'index' %}">Home</a></li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">ETMS <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'email_list' %}">Mailbox</a></li>
+          <li><a href="#">TMS</a></li>
+          <li><a href="#">WMS</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="{% url 'account_logout' %}"><span class="glyphicon glyphicon-user"></span> Sign out</a></li>
+      {% for account in user.socialaccount_set.all %}
+    {% if account.provider == 'google' %}
+        {% if account.extra_data.picture %}
+            <li><img src="{{ account.extra_data.picture }}" alt="Profile Picture"  style="vertical-align: middle;width: 40px;height: 40px;border-radius: 50%;margin:5px 0px"></li>
+        {% else %}
+            <!-- Default profile picture or a placeholder image -->
+            <li><a href="{% provider_login_url 'google' %} " class="btn btn-outline-primary btn-google mt-2"></span> Login</a></li>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+     
+      
+    </ul>
+  </div>
+</nav>
+
+<div style="text-align: center;">
+  <a href="{% url 'compose_email' %}" class="button">Compose</a>
+  <h1>Mailbox: {{ request.user.username }}</h1>
+</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">From</th>
+                <th style="width: 30%;">To</th>
+                <th style="width: 40%;">Subject</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for email in emails %}
+                <tr>
+                    <td>{{ email.From }}</td>
+                    <td>{{ email.To }}</td>
+                    <td> <a href="{% url 'email_detail' email.id %}">{{ email.Subject }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<br/>
+<br/>
+<footer>
+    Allure | Invesdocs &middot; &copy; 2021
+</footer>
+
+</body>
+</html>

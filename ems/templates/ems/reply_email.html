@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reply to Email</title>
+    <style>
+        /* Include styles from compose_email.html */
+        /* Styles for the dialog box */
+        .dialog-box {
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px; /* Increased width for better usability */
+            margin: 0 auto;
+        }
+        /* Styles for the form elements */
+        .form-input {
+            width: calc(100% - 22px); /* Adjusted width for better alignment */
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-button:hover {
+            background-color: #45a049;
+        }
+        /* Centering the form */
+        .center {
+            text-align: center;
+        }
+        /* Styling for email input fields */
+        .email-input {
+            margin-bottom: 10px;
+        }
+        /* Styling for subject input field */
+        .subject-input {
+            margin-bottom: 10px;
+        }
+        /* Styling for the message textarea */
+        .message-textarea {
+            margin-bottom: 10px;
+            /* Increase height */
+            height: 200px; /* Adjust the height as needed */
+        }
+        /* Styling for the cancel button */
+        .cancel-button {
+            background-color: #f44336;
+        }
+        .cancel-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="dialog-box">
+        <h2 class="center">Reply to Email</h2>
+        <form method="post" class="center">
+            {% csrf_token %}
+            <!-- From Email -->
+            <input type="email" name="from_email" placeholder="From" class="form-input email-input" readonly maxlength="320" id="id_from_email" value="{{ form.from_email.value }}"><br>
+            <!-- To Email -->
+            <input type="email" name="to_email" placeholder="To" class="form-input email-input" value="{{ form.to_email.value }}"><br>
+            <!-- CC Email -->
+            <input type="email" name="cc_email" placeholder="CC" class="form-input email-input" value="{{ form.cc_email.value }}"><br>
+            <!-- BCC Email -->
+            <input type="email" name="bcc_email" placeholder="BCC" class="form-input email-input" value="{{ form.bcc_email.value }}"><br>
+            <!-- Subject -->
+            <input type="text" name="subject" placeholder="Subject" class="form-input subject-input" value="{{ form.subject.value }}"><br>
+            <!-- Message Body -->
+            <textarea name="body" placeholder="Body" class="form-input message-textarea" rows="5">{{ form.body.value }}</textarea><br>
+            <!-- Cancel Button -->
+            <a href="{% url 'email_detail' email_id=email_id %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none; display: inline-block;">Email Detail</a>
+            <!-- Send Email Button -->
+            <button type="submit" class="form-button">Reply</button>
+        </form>
+    </div>
+</body>
+</html>

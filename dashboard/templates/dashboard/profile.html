@@ -1,0 +1,113 @@
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Allure | Invesdocs</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Styles for the content */
+    .content {
+          text-align: center;
+          margin-top: 50px;
+      }
+
+      /* Styling for the login card */
+      .login-card {
+          background-color: #f8f9fa; /* Stylish color */
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          padding: 20px;
+          max-width: 400px;
+          margin: 0 auto;
+      }
+
+      /* Styling for the login message */
+      .login-message {
+          font-size: 24px;
+          color: #333;
+          margin-top: 20px;
+      }
+
+      footer {
+        background-color: rgb(68, 66, 66);
+          color: white;
+          text-align: center;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          padding: 10px 0;
+      }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Invesdocs</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="{% url 'index' %}">Home</a></li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">ETMS <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'email_list' %}">Mailbox</a></li>
+          <li><a href="#">TMS</a></li>
+          <li><a href="#">WMS</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+ 
+    <ul class="nav navbar-nav navbar-right">
+      {% if user.is_authenticated %}
+          <!-- User is logged in -->
+          <li><a href="{% url 'account_logout' %}"><span class="glyphicon glyphicon-user"></span> Sign out</a></li>
+          {% for account in user.socialaccount_set.all %}
+              {% if account.provider == 'google' %}
+                  {% if account.extra_data.picture %}
+                      <li><img src="{{ account.extra_data.picture }}" alt="Profile Picture" style="vertical-align: middle; width: 40px; height: 40px; border-radius: 50%; margin: 5px 0px;"></li>
+                  {% endif %}
+              {% endif %}
+          {% endfor %}
+      {% else %}
+          <!-- User is not logged in -->
+          <li><a href="{% url 'account_signup' %}">Sign up</a></li>
+          <li><a href="{% provider_login_url 'google' %}">Login with Google</a></li>
+      {% endif %}
+  </ul>
+  </div>
+</nav>
+  
+<div class="content">
+  <div class="login-card">
+      <h2>   {% for account in user.socialaccount_set.all %}
+        {% if account.provider == 'google' %}
+            {% if account.extra_data.picture %}
+                <img src="{{ account.extra_data.picture }}" alt="Profile Picture"  style="vertical-align: middle;width: 40px;height: 40px;border-radius: 50%;margin:5px 0px">
+            {% else %}
+                <!-- Default profile picture or a placeholder image -->
+                <a href="{% provider_login_url 'google' %} " class="btn btn-outline-primary btn-google mt-2"></span> Login</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}</h2>
+      <p class="login-message">We're working hard to bring you a fantastic InvesDocs experience. Stay tuned!</p>
+  </div>
+</div>
+
+
+
+<footer>
+  Allure | Invesdocs &middot; &copy; 2021
+</footer>
+
+
+
+
+</body>
+</html>
